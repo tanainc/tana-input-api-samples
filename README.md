@@ -2,8 +2,6 @@
 
 <img src='https://img.shields.io/github/license/tanainc/add2node-api-sample?style=for-the-badge'>
 
-# 👨‍💻 How to use
-
 This project has a basic client for Tanas Add2Node-API and a few example scripts.
 
 The client uses node-fetch, but native fetch can be used from Node 17.5 with `--experimental-fetch`
@@ -15,6 +13,10 @@ Please note that the API currently has the following restrictions:
 - Max 5000 chars in one request
 
 Please get in touch if you are hitting these limits
+
+# 👨‍💻 How to use
+
+Install the deps with `yarn install`, then see below for the examples
 
 ## Example:Books
 
