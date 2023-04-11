@@ -3,7 +3,7 @@ import { Field, FieldEntry, TanaNode } from './types/types';
 import fetch from 'node-fetch';
 
 export class TanaAPIHelper {
-  private baseURL = 'http://127.0.0.1:5001/emulator/europe-west1/addToNodeV2';
+  private endpoint = 'https://europe-west1-tagr-prod.cloudfunctions.net/addToNodeV2';
 
   private get schemaNodeId() {
     return `${this.workspaceId}_SCHEMA`;
@@ -13,9 +13,12 @@ export class TanaAPIHelper {
     return `${this.workspaceId}_STASH`;
   }
 
-  constructor(public token: string, public workspaceId: string) {
+  constructor(public token: string, public workspaceId: string, public endpointUrl?: string) {
     this.token = token;
     this.workspaceId = workspaceId;
+    if (endpointUrl) {
+      this.endpoint = endpointUrl;
+    }
   }
 
   async createFields(fields: Field[]) {
@@ -102,7 +105,7 @@ export class TanaAPIHelper {
   }
 
   private async makeRequest(payload: any): Promise<TanaNode[]> {
-    const response = await fetch(this.baseURL, {
+    const response = await fetch(this.endpoint, {
       method: 'POST',
       headers: {
         Authorization: 'Bearer ' + this.token,
