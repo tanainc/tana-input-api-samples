@@ -83,4 +83,4 @@ This example shows how we can create new fields, and then a new tag using those 
 
 # ✍️ Contributing
 
-Please check out our [Contribution Guide](CONTRIBUTING.md) first. Also, make sure you read our [Code of Conduct](CODE_OF_CONDUCT.md)
+Feedback, PRs and suggestions for improvements will be highly appreciated. Make sure you read our [Code of Conduct](CODE_OF_CONDUCT.md)
