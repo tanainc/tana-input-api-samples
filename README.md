@@ -20,7 +20,7 @@ Install the deps with `yarn install`, then see below for the examples
 
 ## Creating fields & tags
 
-To create a new field definition you create a node with the supertag set to `SYS_T02`. You'll likely want to target the Schema-node, which would be `fileid_SCHEMA`.
+To create a new field definition you create a node with the supertag set to `SYS_T02`. You'll likely want to target the Schema-node, which would be `SCHEMA`, but you are free to place tags elsewhere as well. This might be useful when creating templates for example
 
 ```
 {
@@ -57,6 +57,8 @@ To create a tag, set the supertag to `SYS_T01`:
 ```
 
 ## Creating nodes
+
+Nodes will be placed in Library by default, unless targetNodeId is specified
 
 ```
 {
