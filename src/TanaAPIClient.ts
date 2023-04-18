@@ -3,19 +3,15 @@ import { Field, FieldEntry, TanaNode } from './types/types';
 import fetch from 'node-fetch';
 
 export class TanaAPIHelper {
-  private endpoint = 'https://europe-west1-tagr-prod.cloudfunctions.net/addToNodeV2';
+  private endpoint = 'http://127.0.0.1:5001/emulator/europe-west1/addToNodeV2';
 
   private get schemaNodeId() {
-    return `${this.workspaceId}_SCHEMA`;
+    return `SCHEMA`;
   }
 
-  private get stashNodeId() {
-    return `${this.workspaceId}_STASH`;
-  }
-
-  constructor(public token: string, public workspaceId: string, public endpointUrl?: string) {
+  constructor(public token: string, public endpointUrl?: string) {
     this.token = token;
-    this.workspaceId = workspaceId;
+
     if (endpointUrl) {
       this.endpoint = endpointUrl;
     }
@@ -24,7 +20,6 @@ export class TanaAPIHelper {
   async createFields(fields: Field[]) {
     const payload = {
       targetNodeId: this.schemaNodeId,
-      targetFileId: this.workspaceId,
       nodes: fields.map((field) => ({
         name: field.name,
         description: field.description,
@@ -44,7 +39,6 @@ export class TanaAPIHelper {
   async createTag(name: string, description: string, fields: Field[]) {
     const payload = {
       targetNodeId: this.schemaNodeId,
-      targetFileId: this.workspaceId,
       nodes: [
         {
           name,
@@ -74,8 +68,7 @@ export class TanaAPIHelper {
     options: { tagId?: string; targetNodeId?: string } = {},
   ) {
     const payload = {
-      targetNodeId: options.targetNodeId || this.stashNodeId,
-      targetFileId: this.workspaceId,
+      targetNodeId: options.targetNodeId || undefined,
       nodes: [
         {
           name,
@@ -116,6 +109,7 @@ export class TanaAPIHelper {
       if (response.status === 200 || response.status === 201) {
         return response.json();
       }
+
       throw new Error(`${response.status} ${response.statusText}`);
     });
     return (response as any).children as TanaNode[];

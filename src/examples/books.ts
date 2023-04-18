@@ -17,10 +17,9 @@ async function prompt(term: string = 'Hit <enter> to continue'): Promise<string>
 }
 
 const token = process.env.TANA_TOKEN || '';
-const fileId = process.env.TANA_FILE_ID || '';
 
-if (!token || !fileId) {
-  console.log('Please set TANA_TOKEN and TANA_FILE_ID in your environment');
+if (!token) {
+  console.log('Please set TANA_TOKEN in your environment');
   process.exit(1);
 }
 
@@ -34,7 +33,9 @@ console.log('----------------------------------------');
 
 const run = async () => {
   // Create new api client with your token and workspace id
-  const tanaAPIHelper = new TanaAPIHelper(token, fileId);
+  const tanaAPIHelper = new TanaAPIHelper(token);
+
+  await prompt('Hit enter to create a few fields');
 
   // Create some fields for our book tag
   const fields = await tanaAPIHelper.createFields([
@@ -68,7 +69,6 @@ const run = async () => {
   const hobbit = await tanaAPIHelper.createNode(
     'The Hobbit',
     'A book by J.R.R. Tolkien',
-
     [
       {
         id: authorFieldId,

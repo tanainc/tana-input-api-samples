@@ -24,8 +24,7 @@ To create a new field definition you create a node with the supertag set to `SYS
 
 ```
 {
-  targetNodeId: 'xxxyyy_SCHEMA',
-  targetFileId: 'xxxyyy',
+  targetNodeId: 'SCHEMA',
   nodes: [
     {
       name: 'Author',
@@ -45,8 +44,7 @@ To create a tag, set the supertag to `SYS_T01`:
 
 ```
 {
-  targetNodeId: 'xxxyyy_SCHEMA',
-  targetFileId: 'xxxyyy',
+  targetNodeId: 'SCHEMA',
   nodes: [
     {
       name: 'Book',
@@ -62,8 +60,6 @@ To create a tag, set the supertag to `SYS_T01`:
 
 ```
 {
-  targetNodeId: 'xxxyyy_STASH',
-  targetFileId: 'xxxyyy',
   nodes: [
     {
       name: 'The Hobbit',
@@ -79,7 +75,7 @@ To create a tag, set the supertag to `SYS_T01`:
 
 This example shows how we can create new fields, and then a new tag using those fields. We then create a few books using the tag, and add some extra content to the books afterwards.
 
-`TANA_TOKEN=token TANA_FILE_ID=fileId yarn run example:books`
+`TANA_TOKEN=token yarn run example:books`
 
 # ✍️ Contributing
 
