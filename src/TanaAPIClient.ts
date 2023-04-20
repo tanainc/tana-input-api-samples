@@ -64,7 +64,7 @@ export class TanaAPIHelper {
   async createNode(
     name: string,
     description: string,
-    children: (FieldEntry | TanaNode)[],
+    children: (FieldEntry | TanaNode)[] = [],
     options: { tagId?: string; targetNodeId?: string } = {},
   ) {
     const payload = {
@@ -76,14 +76,18 @@ export class TanaAPIHelper {
           supertags: options.tagId ? [{ id: options.tagId }] : [],
           children: children.map((child) => {
             if ('id' in child) {
+              const childrenToCreate = [];
+              if (typeof child.value === 'string') {
+                childrenToCreate.push({
+                  name: child.value,
+                });
+              } else {
+                childrenToCreate.push(child.value);
+              }
               return {
                 type: 'field',
                 attributeId: child.id,
-                children: [
-                  {
-                    name: child.value,
-                  },
-                ],
+                children: childrenToCreate,
               };
             } else {
               return child;

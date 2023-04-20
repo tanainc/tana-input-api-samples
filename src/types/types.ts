@@ -6,7 +6,7 @@ export type Field = {
 
 export type FieldEntry = {
   id: string;
-  value: string;
+  value: string | { id: string; dataType: 'reference' };
 };
 
 export type TanaNode = {

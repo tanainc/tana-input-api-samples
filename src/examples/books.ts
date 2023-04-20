@@ -83,16 +83,22 @@ const run = async () => {
   );
 
   console.log(hobbit);
-  await prompt('First book created, hit enter to create the second book');
+  await prompt('First book created, hit enter to create author for the second book');
+
+  const williamGibson = await tanaAPIHelper.createNode('William Gibson', 'A writer of science fiction');
+
+  await prompt('First book created, hit enter to create author for the second book');
 
   const neuromancer = await tanaAPIHelper.createNode(
     'Neuromancer',
     'Got the chiba city blues',
-
     [
       {
         id: authorFieldId!,
-        value: 'William Gibson',
+        value: {
+          id: williamGibson.nodeId!,
+          dataType: 'reference',
+        },
       },
       {
         id: myRatingFieldId!,
