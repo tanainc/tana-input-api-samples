@@ -73,6 +73,13 @@ Nodes will be placed in Library by default, unless targetNodeId is specified
 }
 ```
 
+## Example:Books
+
+This example shows how we can create new fields, and then a new tag using those fields. We then create a few books using the tag, and add some extra content to the books afterwards.
+
+`TANA_TOKEN=token yarn run example:books`
+
+
 ## Creating node with field type reference
 
 The dataType reference in combination with the id of the node add the refered not to that field.
@@ -110,11 +117,7 @@ Available dataTypes:
 }
 ```
 
-## Example:Books
 
-This example shows how we can create new fields, and then a new tag using those fields. We then create a few books using the tag, and add some extra content to the books afterwards.
-
-`TANA_TOKEN=token yarn run example:books`
 
 # ✍️ Contributing
 
