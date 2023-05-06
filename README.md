@@ -79,6 +79,46 @@ This example shows how we can create new fields, and then a new tag using those 
 
 `TANA_TOKEN=token yarn run example:books`
 
+
+## Creating node with field type reference
+
+The dataType reference in combination with the id of the node add the refered not to that field.
+
+Available dataTypes:
+ - boolean
+ - date
+ - reference
+
+```
+{
+    "nodes": [
+        {
+            "name": "Neuromancer",
+            "description": "Got the chiba city blues",
+            "supertags": [
+                {
+                    "id": "lpl-rFx55q"
+                }
+            ],
+            "children": [
+                {
+                    "type": "field",
+                    "attributeId": "o0IV60zsM6",
+                    "children": [
+                        {
+                            "id": "yX3HXLVlbj",
+                            "dataType": "reference"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+```
+
+
+
 # ✍️ Contributing
 
 Feedback, PRs and suggestions for improvements will be highly appreciated. Make sure you read our [Code of Conduct](CODE_OF_CONDUCT.md)
