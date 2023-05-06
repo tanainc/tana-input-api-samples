@@ -73,6 +73,29 @@ Nodes will be placed in Library by default, unless targetNodeId is specified
 }
 ```
 
+## Creating node with field type reference
+
+The dataType reference in combination with the id of the node add the refered not to that field. 
+
+```
+{
+  "nodes": [
+    {
+      "name": "Neuromancer",
+      "description": "Got the chiba city blues",
+      "supertags": [{ "id": "lpl-rFx55q" }],
+      "children": [
+        {
+          "type": "field",
+          "attributeId": "o0IV60zsM6",
+          "children": [{ "id": "yX3HXLVlbj", "dataType": "reference" }]
+        },
+      ]
+    }
+  ]
+}
+```
+
 ## Example:Books
 
 This example shows how we can create new fields, and then a new tag using those fields. We then create a few books using the tag, and add some extra content to the books afterwards.
