@@ -3,7 +3,7 @@ import { Field, FieldEntry, TanaNode } from './types/types';
 import fetch from 'node-fetch';
 
 export class TanaAPIHelper {
-  private endpoint = 'http://127.0.0.1:5001/emulator/europe-west1/addToNodeV2';
+  private endpoint = 'https://europe-west1-tagr-prod.cloudfunctions.net/addToNodeV2';
 
   private get schemaNodeId() {
     return `SCHEMA`;
