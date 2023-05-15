@@ -17,7 +17,7 @@ export class TanaAPIHelper {
     }
   }
 
-  async createFields(fields: Field[]) {
+  async createFieldDefinitions(fields: APIPlainNode[]) {
     const payload = {
       targetNodeId: this.schemaNodeId,
       nodes: fields.map((field) => ({
@@ -36,65 +36,41 @@ export class TanaAPIHelper {
     }));
   }
 
-  async createTag(name: string, description: string, fields: Field[]) {
+  async createTagDefinition(node: APIPlainNode) {
+    if (!node.supertags) {
+      node.supertags = [];
+    }
+    node.supertags.push({ id: coreTemplateId });
     const payload = {
       targetNodeId: this.schemaNodeId,
-      nodes: [
-        {
-          name,
-          description,
-          supertags: [{ id: coreTemplateId }],
-          children: fields.map((field) => ({
-            type: 'field',
-            attributeId: field.id,
-            children: [
-              {
-                name: '', // default value would go here
-              },
-            ],
-          })),
-        },
-      ],
+      nodes: [node],
     };
 
     const createdTag = await this.makeRequest(payload);
     return createdTag[0].nodeId;
   }
 
-  async createNode(
-    name: string,
-    description: string,
-    children: (FieldEntry | TanaNode)[] = [],
-    options: { tagId?: string; targetNodeId?: string } = {},
-  ) {
+  // async sendfile(fileName: string) {
+  //   const contents = readfile(fileName);
+
+  //   const payload = {
+  //     nodes: [
+  //       {
+  //         filename: 'cv.pdf',
+  //         dataType: 'file',
+  //         contentType: 'application/pdf',
+  //         file: contents.toString('base64'),
+  //       },
+  //     ],
+  //   };
+
+  //   return await this.makeRequest(payload);
+  // }
+
+  async createNode(node: APINode | APIField, targetNodeId?: string) {
     const payload = {
-      targetNodeId: options.targetNodeId || undefined,
-      nodes: [
-        {
-          name,
-          description,
-          supertags: options.tagId ? [{ id: options.tagId }] : [],
-          children: children.map((child) => {
-            if ('id' in child) {
-              const childrenToCreate = [];
-              if (typeof child.value === 'string') {
-                childrenToCreate.push({
-                  name: child.value,
-                });
-              } else {
-                childrenToCreate.push(child.value);
-              }
-              return {
-                type: 'field',
-                attributeId: child.id,
-                children: childrenToCreate,
-              };
-            } else {
-              return child;
-            }
-          }),
-        },
-      ],
+      targetNodeId: targetNodeId || this.schemaNodeId,
+      nodes: [node],
     };
 
     const createdNode = await this.makeRequest(payload);
@@ -109,13 +85,12 @@ export class TanaAPIHelper {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(payload),
-    }).then((response) => {
-      if (response.status === 200 || response.status === 201) {
-        return response.json();
-      }
-
-      throw new Error(`${response.status} ${response.statusText}`);
     });
-    return (response as any).children as TanaNode[];
+
+    if (response.status === 200 || response.status === 201) {
+      return ((await response.json()) as any).children as TanaNode[];
+    }
+    console.log(await response.text());
+    throw new Error(`${response.status} ${response.statusText}`);
   }
 }
