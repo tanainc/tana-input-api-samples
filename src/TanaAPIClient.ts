@@ -50,7 +50,7 @@ export class TanaAPIHelper {
     return createdTag[0].nodeId;
   }
 
-  async createNode(node: APINode | APIField, targetNodeId?: string) {
+  async createNode(node: APINode, targetNodeId?: string) {
     const payload = {
       targetNodeId: targetNodeId || this.schemaNodeId,
       nodes: [node],
@@ -60,7 +60,7 @@ export class TanaAPIHelper {
     return createdNode[0];
   }
 
-  private async makeRequest(payload: any): Promise<TanaNode[]> {
+  private async makeRequest(payload: { targetNodeId?: string; nodes: APINode[] }): Promise<TanaNode[]> {
     const response = await fetch(this.endpoint, {
       method: 'POST',
       headers: {
