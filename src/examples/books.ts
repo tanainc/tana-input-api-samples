@@ -72,7 +72,7 @@ const run = async () => {
   });
 
   console.log(williamGibson);
-  await waitForEnter('Author created, press enter to create the second book');
+  await waitForEnter('Author created, press enter to create the book');
 
   const neuromancer = await tanaAPIHelper.createNode({
     name: 'Neuromancer',
@@ -104,9 +104,9 @@ const run = async () => {
 
   console.log(neuromancer);
 
-  await waitForEnter('First note created, hit enter to add some notes for the second book');
+  await waitForEnter('First note created, hit enter to add some notes for the book');
 
-  // Add my favourite quote from the second book, with Neuromancer as target node
+  // Add my favourite quote from the book, with Neuromancer as target node
   const neuromancerQuote = await tanaAPIHelper.createNode(
     {
       name: 'Favourite quote',
