@@ -38,6 +38,14 @@ const referenceNode = z.object({
   id: idType,
 });
 
+const fileNode = z.object({
+  type: z.literal('node').optional(),
+  dataType: z.literal('file'),
+  file: z.string(),
+  contentType: z.string(),
+  filename: z.string(),
+});
+
 export type APIPlainNode = z.infer<typeof plainNodeBase> & {
   children?: z.infer<typeof nodeOrFiled>[];
 };
@@ -54,7 +62,7 @@ const field: z.ZodType<APIField> = fieldBase.extend({
   children: z.lazy(() => z.array(fieldChild)),
 });
 
-const node = z.union([plainNode, dateNode, referenceNode]);
+const node = z.union([plainNode, dateNode, referenceNode, fileNode]);
 
 const fieldChild = z.union([node, checkboxNode]);
 const nodeOrFiled = z.union([field, node]);
@@ -65,9 +73,9 @@ export type APIDataType = z.infer<typeof dataType>;
 export type APICheckboxNode = z.infer<typeof checkboxNode>;
 export type APIDateNode = z.infer<typeof dateNode>;
 export type APIReferenceNode = z.infer<typeof referenceNode>;
-
-export type APINode = APIPlainNode | APIDateNode | APIReferenceNode;
-export type APIFieldValue = APINode | APICheckboxNode;
+export type APIFileNode = z.infer<typeof fileNode>;
+export type APINode = APIPlainNode | APIDateNode | APIReferenceNode | APIFileNode;
+export type APIFieldValue = APINode | APICheckboxNode | APIFileNode;
 
 export type TanaNode = {
   nodeId?: string;

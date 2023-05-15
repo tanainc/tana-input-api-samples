@@ -1,7 +1,13 @@
 import { attrDefTemplateId, coreTemplateId } from './types/constants';
-import { Field, FieldEntry, TanaNode } from './types/types';
+import { APINode, APIPlainNode, TanaNode } from './types/types';
 import fetch from 'node-fetch';
+import { readFileSync } from 'fs';
 
+function readfile(filename: string) {
+  // read filename from disk, return array buffer
+  const file = readFileSync(filename);
+  return file;
+}
 export class TanaAPIHelper {
   private endpoint = 'https://europe-west1-tagr-prod.cloudfunctions.net/addToNodeV2';
 
@@ -48,6 +54,21 @@ export class TanaAPIHelper {
 
     const createdTag = await this.makeRequest(payload);
     return createdTag[0].nodeId;
+  }
+
+  async sendfile(fileName: string) {
+    const contents = readfile(fileName);
+
+    return await this.makeRequest({
+      nodes: [
+        {
+          filename: 'cv.pdf',
+          dataType: 'file',
+          contentType: 'application/pdf',
+          file: contents.toString('base64'),
+        },
+      ],
+    });
   }
 
   async createNode(node: APINode, targetNodeId?: string) {

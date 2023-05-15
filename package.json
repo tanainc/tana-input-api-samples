@@ -13,6 +13,7 @@
   "scripts": {
     "prepare": "rm -rf dist/ && ./node_modules/.bin/tsc  --project tsconfig.json",
     "build": "yarn prepare",
-    "example:books": "yarn build && node --experimental-modules --es-module-specifier-resolution=node dist/examples/books.js"
+    "example:books": "yarn build && node --experimental-modules --es-module-specifier-resolution=node dist/examples/books.js",
+    "example:file": "yarn build && node --experimental-modules --es-module-specifier-resolution=node dist/examples/file.js"
   }
 }
