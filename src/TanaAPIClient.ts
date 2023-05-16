@@ -57,21 +57,6 @@ export class TanaAPIHelper {
     return createdTag[0].nodeId;
   }
 
-  async sendfile(fileName: string) {
-    const contents = readfile(fileName);
-
-    return await this.makeRequest({
-      nodes: [
-        {
-          filename: 'cv.pdf',
-          dataType: 'file',
-          contentType: 'application/pdf',
-          file: contents.toString(),
-        },
-      ],
-    });
-  }
-
   async createNode(node: APINode, targetNodeId?: string) {
     const payload = {
       targetNodeId: targetNodeId,
