@@ -1,20 +1,6 @@
-import * as readline from 'readline';
+import { readFileSync } from 'fs';
 import { TanaAPIHelper } from '../TanaAPIClient';
-
-const readlineX = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
-async function prompt(term: string = 'Hit <enter> to continue'): Promise<string> {
-  console.log('\n\n');
-  return new Promise<string>((resolve) => {
-    readlineX.question(term, (answer) => {
-      console.log('\n\n');
-      resolve(answer);
-    });
-  });
-}
+import { waitForEnter } from '../utils';
 
 const token = process.env.TANA_TOKEN || '';
 
@@ -25,9 +11,9 @@ if (!token) {
 
 console.log('----------------------------------------');
 console.log('This script will create a tag called "Book"');
-console.log('It will then create a few books with that tag');
+console.log('It will then create a books with that tag andd some contents to it');
 console.log('');
-console.log('You must hit enter between each call to the API');
+console.log('Hit enter to go to the next step');
 console.log('The rate limit is one call per second');
 console.log('----------------------------------------');
 
@@ -35,10 +21,10 @@ const run = async () => {
   // Create new api client with your token and workspace id
   const tanaAPIHelper = new TanaAPIHelper(token);
 
-  await prompt('Hit enter to create a few fields');
+  await waitForEnter('Hit enter to create a few fields');
 
   // Create some fields for our book tag
-  const fields = await tanaAPIHelper.createFields([
+  const fields = await tanaAPIHelper.createFieldDefinitions([
     {
       name: 'Author',
       description: 'Who wrote the book',
@@ -47,141 +33,111 @@ const run = async () => {
       name: 'My rating',
       description: 'How I rated the book',
     },
+    {
+      name: 'Purchase date',
+      description: 'When I bought the book',
+    },
   ]);
 
   console.log(fields);
-  await prompt('Fields created, hit enter to create tag');
-  // create the book tag itself, using the fields we just created
-  const tagId = await tanaAPIHelper.createTag('Book', 'I use this to track books I read', fields);
 
-  if (!tagId) {
-    console.log('tagId is undefined, something went wrong creating the tag');
+  await waitForEnter('Fields created, hit enter to create tag');
+
+  // create the book tag itself, using the fields we just created
+  const bookTagId = await tanaAPIHelper.createTagDefinition({
+    name: 'Book',
+    description: 'A book',
+    children: fields.map((field) => ({
+      attributeId: field.id,
+      type: 'field',
+      children: [{ name: '' }],
+    })),
+  });
+
+  if (!bookTagId) {
+    console.log('bookTagId is undefined, something went wrong creating the tag');
     return;
   }
 
-  console.log('tagId', tagId);
-  await prompt('Tag created, hit enter to create the first book');
+  console.log('bookTagId', bookTagId);
+  await waitForEnter('Tag created, hit enter to create an author');
+
   // get references to the fields we created earlier
   const authorFieldId = fields.find((field) => field.name === 'Author')?.id;
   const myRatingFieldId = fields.find((field) => field.name === 'My rating')?.id;
+  const purchaseDateFieldId = fields.find((field) => field.name === 'Purchase date')?.id;
 
-  // create a few books with our new tag
-  const hobbit = await tanaAPIHelper.createNode(
-    'The Hobbit',
-    'A book by J.R.R. Tolkien',
-    [
+  const williamGibson = await tanaAPIHelper.createNode({
+    name: 'William Gibson',
+    description: 'A writer of science fiction',
+  });
+
+  console.log(williamGibson);
+  await waitForEnter('Author created, press enter to create the book');
+
+  const neuromancer = await tanaAPIHelper.createNode({
+    name: 'Neuromancer',
+    description: 'Got the chiba city blues',
+    children: [
       {
-        id: authorFieldId,
-        value: 'J.R.R. Tolkien',
+        attributeId: authorFieldId,
+        type: 'field',
+        children: [
+          {
+            id: williamGibson.nodeId!,
+            dataType: 'reference',
+          },
+        ],
       },
       {
-        id: myRatingFieldId,
-        value: '5',
-      },
-    ],
-    { tagId },
-  );
-
-  console.log(hobbit);
-  await prompt('First book created, hit enter to create author for the second book');
-
-  const williamGibson = await tanaAPIHelper.createNode('William Gibson', 'A writer of science fiction');
-
-  await prompt('First book created, hit enter to create author for the second book');
-
-  const neuromancer = await tanaAPIHelper.createNode(
-    'Neuromancer',
-    'Got the chiba city blues',
-    [
-      {
-        id: authorFieldId!,
-        value: {
-          id: williamGibson.nodeId!,
-          dataType: 'reference',
-        },
+        attributeId: myRatingFieldId!,
+        type: 'field',
+        children: [{ name: '5' }],
       },
       {
-        id: myRatingFieldId!,
-        value: '4',
+        attributeId: purchaseDateFieldId!,
+        type: 'field',
+        children: [{ name: '1984-09-21', dataType: 'date' }],
       },
     ],
-    { tagId },
-  );
+    supertags: [{ id: bookTagId }],
+  });
 
   console.log(neuromancer);
-  await prompt('Second book created, hit enter to create the third book');
-  const dune = await tanaAPIHelper.createNode(
-    'Dune',
-    'He who controls the spice controls the universe',
-    [
-      {
-        id: authorFieldId!,
-        value: 'Frank Herbert',
-      },
-      {
-        id: myRatingFieldId!,
-        value: '5',
-      },
-    ],
-    { tagId },
-  );
 
-  console.log(dune);
-  await prompt('Third book created, hit enter to add some notes for the first book');
+  await waitForEnter('First note created, hit enter to add some notes for the book');
 
-  // Make a note of the main antagonist in the first book
-  const hobbitNotes = await tanaAPIHelper.createNode(
-    'Main antagonist',
-    'The main antagonist in the book',
-    [
-      {
-        name: 'Gollum',
-        description: 'A creature that lives in the Misty Mountains',
-      },
-    ],
-    {
-      targetNodeId: hobbit.nodeId,
-    },
-  );
-
-  console.log(hobbitNotes);
-  await prompt('First note created, hit enter to add some notes for the second book');
-  // Add my favourite quote from the second book
+  // Add my favourite quote from the book, with Neuromancer as target node
   const neuromancerQuote = await tanaAPIHelper.createNode(
-    'Favourite quote',
-    'My favourite quote from the book',
-    [
-      {
-        name: 'Quote',
-        description: 'The sky above the port was the color of television, tuned to a dead channel.',
-      },
-    ],
     {
-      targetNodeId: neuromancer.nodeId,
+      name: 'Favourite quote',
+      description: 'My favourite quote from the book',
+      children: [
+        {
+          name: 'Quote',
+          description: 'The sky above the port was the color of television, tuned to a dead channel.',
+        },
+      ],
     },
+    neuromancer.nodeId,
   );
 
   console.log(neuromancerQuote);
-  await prompt('Second note created, hit enter to add some notes for the third book');
-  // Add my favorite characters from the third book
-  const duneCharacters = await tanaAPIHelper.createNode(
-    'Favourite characters',
-    'My favourite characters from the book',
-    [
-      {
-        name: 'Paul Atreides',
-        description: 'The son of the Duke Leto Atreides',
-      },
-      {
-        name: 'Chani',
-        description: "Paul's concubine",
-      },
-    ],
+
+  await waitForEnter('Notes added, hit enter to upload a synopsis of the book (pdf)');
+
+  const filename = 'examples/synopsis.pdf';
+  const synposisFileContents = readFileSync(filename, { encoding: 'base64' });
+  // Upload a PDF synopsis of the book
+  const synopsis = await tanaAPIHelper.createNode(
     {
-      targetNodeId: dune.nodeId,
+      filename: 'synopsis.pdf',
+      dataType: 'file',
+      contentType: 'application/pdf',
+      file: synposisFileContents.toString(),
     },
+    neuromancer.nodeId,
   );
-  console.log(duneCharacters);
-  prompt('Third note created, hit enter to continue');
+  console.log(synopsis);
 };
 run().then(() => process.exit(0));
