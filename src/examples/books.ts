@@ -1,3 +1,4 @@
+import { readFileSync } from 'fs';
 import { TanaAPIHelper } from '../TanaAPIClient';
 import { waitForEnter } from '../utils';
 
@@ -122,5 +123,21 @@ const run = async () => {
   );
 
   console.log(neuromancerQuote);
+
+  await waitForEnter('Notes added, hit enter to upload a synopsis of the book (pdf)');
+
+  const filename = 'examples/synopsis.pdf';
+  const synposisFileContents = readFileSync(filename, { encoding: 'base64' });
+  // Upload a PDF synopsis of the book
+  const synopsis = await tanaAPIHelper.createNode(
+    {
+      filename: 'synopsis.pdf',
+      dataType: 'file',
+      contentType: 'application/pdf',
+      file: synposisFileContents.toString(),
+    },
+    neuromancer.nodeId,
+  );
+  console.log(synopsis);
 };
 run().then(() => process.exit(0));

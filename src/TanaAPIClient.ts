@@ -74,7 +74,7 @@ export class TanaAPIHelper {
 
   async createNode(node: APINode, targetNodeId?: string) {
     const payload = {
-      targetNodeId: targetNodeId || this.schemaNodeId,
+      targetNodeId: targetNodeId,
       nodes: [node],
     };
 
