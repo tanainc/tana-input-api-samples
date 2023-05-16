@@ -5,7 +5,8 @@ import { readFileSync } from 'fs';
 
 function readfile(filename: string) {
   // read filename from disk, return array buffer
-  const file = readFileSync(filename);
+  const file = readFileSync(filename, { encoding: 'base64' });
+
   return file;
 }
 export class TanaAPIHelper {
@@ -65,7 +66,7 @@ export class TanaAPIHelper {
           filename: 'cv.pdf',
           dataType: 'file',
           contentType: 'application/pdf',
-          file: contents.toString('base64'),
+          file: contents.toString(),
         },
       ],
     });
