@@ -175,6 +175,13 @@ This example shows how we can create new fields, and then a new tag using those 
 
 `TANA_TOKEN=token yarn run example:books`
 
+## Example:Upload
+
+This example is a basic uploader for `m4a` audio-files from some specified directory to the
+Tana inbox.  It creates a file `tana-upload-state.json` to keep track of what's already uploaded.
+
+`TANA_TOKEN=token yarn run example:upload ~/Recordings/`
+
 # Current limitations
 
 Rate limiting:
