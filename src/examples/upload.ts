@@ -22,12 +22,12 @@ async function processFile(state: State, helper: TanaAPIHelper, path: string, fi
     return;
   }
 
-  const synposisFileContents = await readFile(path, { encoding: 'base64' });
+  const fileContent = await readFile(path, { encoding: 'base64' });
   const node: APIFileNode = {
     filename: `Audio captured from ${filename.replaceAll('/', '_')}`,
     dataType: 'file',
     contentType: 'audio/mp4',
-    file: synposisFileContents.toString(),
+    file: fileContent.toString(),
   };
   const responseObj = await helper.createNode(node, 'INBOX');
   state[filename] = responseObj;
