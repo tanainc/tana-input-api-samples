@@ -18,8 +18,7 @@ type State = Record<string, any>;
 
 async function processFile(state: State, helper: TanaAPIHelper, path: string, filename: string) {
   if (state[filename]?.nodeId) {
-    console.log(`Already processed '${filename}'.`);
-    return;
+    return false;
   }
 
   const fileContent = await readFile(path, { encoding: 'base64' });
@@ -29,8 +28,10 @@ async function processFile(state: State, helper: TanaAPIHelper, path: string, fi
     contentType: 'audio/mp4',
     file: fileContent.toString(),
   };
+  console.log(`Will upload file:  ${filename}`);
   const responseObj = await helper.createNode(node, 'INBOX');
   state[filename] = responseObj;
+  return responseObj;
 }
 
 async function walk(dir: string): Promise<string[]> {
@@ -51,14 +52,30 @@ async function run(folder: string) {
   } catch {}
   const tanaAPIHelper = new TanaAPIHelper(token);
 
+  let numAlreadyHandled = 0;
+  let numUploaded = 0;
   const files = await walk(folder);
   for (const f of files) {
     if (!f.endsWith('.m4a')) {
       continue;
     }
     const fn = f.slice(folder.length);
-    await processFile(state, tanaAPIHelper, f, fn);
+    const result = await processFile(state, tanaAPIHelper, f, fn);
+    if (!result) {
+      numAlreadyHandled++;
+    } else {
+      numUploaded++;
+    }
   }
+  const output = [];
+  if (numUploaded) {
+    output.push(`Uploaded ${numUploaded} ${numUploaded === 1 ? 'file' : 'files'}.`);
+  }
+  if (numAlreadyHandled) {
+    output.push(`Already uploaded ${numAlreadyHandled} ${numAlreadyHandled === 1 ? 'file' : 'files'}.`);
+  }
+  console.log(output.join('  '));
+
   await writeFile(stateFilePath, JSON.stringify(state, null, 2));
 }
 
