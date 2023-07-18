@@ -47,11 +47,11 @@ const fileNode = z.object({
 });
 
 export type APIPlainNode = z.infer<typeof plainNodeBase> & {
-  children?: z.infer<typeof nodeOrFiled>[];
+  children?: z.infer<typeof nodeOrField>[];
 };
 
 const plainNode: z.ZodType<APIPlainNode> = plainNodeBase.extend({
-  children: z.lazy(() => z.array(nodeOrFiled)).optional(),
+  children: z.lazy(() => z.array(nodeOrField)).optional(),
 });
 
 export type APIField = z.infer<typeof fieldBase> & {
@@ -65,7 +65,7 @@ const field: z.ZodType<APIField> = fieldBase.extend({
 const node = z.union([plainNode, dateNode, referenceNode, fileNode]);
 
 const fieldChild = z.union([node, checkboxNode]);
-const nodeOrFiled = z.union([field, node]);
+const nodeOrField = z.union([field, node]);
 
 export const APISchema = z.array(node);
 
