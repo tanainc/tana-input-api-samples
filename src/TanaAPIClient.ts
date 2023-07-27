@@ -74,7 +74,6 @@ export class TanaAPIHelper {
     };
 
     const createdNode = await this.makeRequest(payload);
-    console.log(createdNode);
     return createdNode;
   }
 

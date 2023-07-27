@@ -23,6 +23,23 @@ const run = async () => {
 
   await expectSuccess(() => tanaAPIHelper.setNodeName('foo', helloWorldId!));
 
+  // valid tag defintion
+  const myTagId = await expectSuccess(() =>
+    tanaAPIHelper.createTagDefinition({
+      name: `My tag`,
+    }),
+  );
+
+  // valid field defintion
+  const myFieldId = await expectSuccess(() =>
+    tanaAPIHelper.createFieldDefinitions([
+      {
+        name: `My field`,
+        description: 'my field',
+      },
+    ]),
+  );
+
   // valid inline ref
   await expectSuccess(() =>
     tanaAPIHelper.createNode({
