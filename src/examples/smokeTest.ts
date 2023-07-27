@@ -31,14 +31,19 @@ const run = async () => {
   );
 
   // valid field defintion
-  const myFieldId = await expectSuccess(() =>
-    tanaAPIHelper.createFieldDefinitions([
-      {
-        name: `My field`,
-        description: 'my field',
-      },
-    ]),
-  );
+  const attributeId = (
+    await expectSuccess(() =>
+      tanaAPIHelper.createFieldDefinitions([
+        {
+          name: `My field`,
+          description: 'my field',
+        },
+      ]),
+    )
+  )[0].id;
+
+  // Add field to tag
+  await expectSuccess(() => tanaAPIHelper.addField({ type: 'field', attributeId }, myTagId!));
 
   // valid inline ref
   await expectSuccess(() =>

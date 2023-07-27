@@ -80,7 +80,7 @@ const run = async () => {
     description: 'Got the chiba city blues',
     children: [
       {
-        attributeId: authorFieldId,
+        attributeId: authorFieldId!,
         type: 'field',
         children: [
           {

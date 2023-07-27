@@ -1,5 +1,5 @@
 import { attrDefTemplateId, coreTemplateId } from './types/constants';
-import { APINode, APIPlainNode, TanaNode } from './types/types';
+import { APIField, APINode, APIPlainNode, TanaNode } from './types/types';
 import fetch from 'node-fetch';
 import { readFileSync } from 'fs';
 
@@ -37,9 +37,9 @@ export class TanaAPIHelper {
     const createdFields = await this.makeRequest(payload);
 
     return createdFields.map((field: any) => ({
-      name: field.name,
-      description: field.description,
-      id: field.nodeId,
+      name: field.name as string,
+      description: field.description as string,
+      id: field.nodeId as string,
     }));
   }
 
@@ -77,8 +77,18 @@ export class TanaAPIHelper {
     return createdNode;
   }
 
+  async addField(field: APIField, targetNodeId?: string) {
+    const payload = {
+      targetNodeId: targetNodeId,
+      nodes: [field],
+    };
+
+    const createdNode = await this.makeRequest(payload);
+    return createdNode;
+  }
+
   private async makeRequest(
-    payload: { targetNodeId?: string } & ({ nodes: APINode[] } | { setName: string }),
+    payload: { targetNodeId?: string } & ({ nodes: (APINode | APIField)[] } | { setName: string }),
   ): Promise<TanaNode[]> {
     const response = await fetch(this.endpoint, {
       method: 'POST',

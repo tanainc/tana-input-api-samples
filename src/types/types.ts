@@ -55,11 +55,11 @@ const plainNode: z.ZodType<APIPlainNode> = plainNodeBase.extend({
 });
 
 export type APIField = z.infer<typeof fieldBase> & {
-  children: z.infer<typeof fieldChild>[];
+  children?: z.infer<typeof fieldChild>[];
 };
 
 const field: z.ZodType<APIField> = fieldBase.extend({
-  children: z.lazy(() => z.array(fieldChild)),
+  children: z.lazy(() => z.array(fieldChild)).optional(),
 });
 
 const node = z.union([plainNode, dateNode, referenceNode, fileNode]);
