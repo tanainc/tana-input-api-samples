@@ -13,16 +13,20 @@ const run = async () => {
   const INLINEREF_NODE_ATTRIBUTE = 'data-inlineref-node';
 
   // plain node
-  await expectSuccess(() =>
-    tanaAPIHelper.createNode({
-      name: `Hello world`,
-    }),
-  );
+  const helloWorldId = (
+    await expectSuccess(() =>
+      tanaAPIHelper.createNode({
+        name: `Hello world`,
+      }),
+    )
+  ).nodeId;
+
+  await expectSuccess(() => tanaAPIHelper.setNodeName('foo', helloWorldId!));
 
   // valid inline ref
   await expectSuccess(() =>
     tanaAPIHelper.createNode({
-      name: `hey <span ${INLINEREF_NODE_ATTRIBUTE}="MwDFM53rqhJ2"></span> you`,
+      name: `hey <span ${INLINEREF_NODE_ATTRIBUTE}="${helloWorldId}"></span> you`,
     }),
   );
 
@@ -153,16 +157,17 @@ async function expectFailure(method: () => Promise<any>) {
   );
 }
 
-async function expectSuccess(method: () => Promise<any>) {
+async function expectSuccess<T = any>(method: () => Promise<T>): Promise<T> {
   // wait for 1000ms
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
   return method().then(
-    () => {
+    (r) => {
       // Expected
+      return r;
     },
-    () => {
-      throw new Error('Expected success');
+    (e) => {
+      throw new Error('Expected success', { cause: e });
     },
   );
 }

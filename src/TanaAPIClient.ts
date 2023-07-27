@@ -67,7 +67,20 @@ export class TanaAPIHelper {
     return createdNode[0];
   }
 
-  private async makeRequest(payload: { targetNodeId?: string; nodes: APINode[] }): Promise<TanaNode[]> {
+  async setNodeName(newName: string, targetNodeId?: string) {
+    const payload = {
+      targetNodeId: targetNodeId,
+      setName: newName,
+    };
+
+    const createdNode = await this.makeRequest(payload);
+    console.log(createdNode);
+    return createdNode;
+  }
+
+  private async makeRequest(
+    payload: { targetNodeId?: string } & ({ nodes: APINode[] } | { setName: string }),
+  ): Promise<TanaNode[]> {
     const response = await fetch(this.endpoint, {
       method: 'POST',
       headers: {
@@ -78,7 +91,12 @@ export class TanaAPIHelper {
     });
 
     if (response.status === 200 || response.status === 201) {
-      return ((await response.json()) as any).children as TanaNode[];
+      const json = await response.json();
+      if ('setName' in payload) {
+        return [json] as any as TanaNode[];
+      } else {
+        return (json as any).children as TanaNode[];
+      }
     }
     console.log(await response.text());
     throw new Error(`${response.status} ${response.statusText}`);
