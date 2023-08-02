@@ -30,6 +30,13 @@ const run = async () => {
     }),
   );
 
+  // second valid tag defintion
+  const myTagId2 = await expectSuccess(() =>
+    tanaAPIHelper.createTagDefinition({
+      name: `My tag2`,
+    }),
+  );
+
   // valid field defintion
   const attributeId = (
     await expectSuccess(() =>
@@ -44,6 +51,41 @@ const run = async () => {
 
   // Add field to tag
   await expectSuccess(() => tanaAPIHelper.addField({ type: 'field', attributeId }, myTagId!));
+
+  // create node with multiple tags
+  await expectSuccess(() =>
+    tanaAPIHelper.createNode({
+      name: `some foo`,
+      supertags: [
+        {
+          id: myTagId!,
+        },
+        {
+          id: myTagId2!,
+        },
+      ],
+    }),
+  );
+
+  // create a child with multiple tags
+  await expectSuccess(() =>
+    tanaAPIHelper.createNode({
+      name: `Parent`,
+      children: [
+        {
+          name: 'Child',
+          supertags: [
+            {
+              id: myTagId!,
+            },
+            {
+              id: myTagId2!,
+            },
+          ],
+        },
+      ],
+    }),
+  );
 
   // valid inline ref
   await expectSuccess(() =>
