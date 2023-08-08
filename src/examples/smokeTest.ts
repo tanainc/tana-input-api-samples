@@ -21,6 +21,13 @@ const run = async () => {
     )
   ).nodeId;
 
+  // formatting
+  await expectSuccess(() =>
+    tanaAPIHelper.createNode({
+      name: `<b>bold</b> <i>italic</i> <del>striked</del> <mark>highlight</mark> **bold** __italic__ ~~striked~~ ^^highlight^^`,
+    }),
+  );
+
   await expectSuccess(() => tanaAPIHelper.setNodeName('foo', helloWorldId!));
 
   // valid tag defintion
