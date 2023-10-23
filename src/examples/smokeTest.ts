@@ -114,6 +114,84 @@ const run = async () => {
     }),
   );
 
+  // date
+  await expectSuccess(() =>
+    tanaAPIHelper.createNode({
+      name: 'date test',
+      children: [
+        {
+          dataType: 'date',
+          name: '2020-01-01',
+        },
+      ],
+    }),
+  );
+
+  // date range
+  await expectSuccess(() =>
+    tanaAPIHelper.createNode({
+      name: 'date range test',
+      children: [
+        {
+          dataType: 'date',
+          name: '2020-01-01/2020-01-02',
+        },
+      ],
+    }),
+  );
+
+  // week test
+  await expectSuccess(() =>
+    tanaAPIHelper.createNode({
+      name: 'week test',
+      children: [
+        {
+          dataType: 'date',
+          name: '2020-W12/2020-W15',
+        },
+      ],
+    }),
+  );
+
+  // month test
+  await expectSuccess(() =>
+    tanaAPIHelper.createNode({
+      name: 'month test',
+      children: [
+        {
+          dataType: 'date',
+          name: '2020-05/2020-08',
+        },
+      ],
+    }),
+  );
+
+  // year test
+  await expectSuccess(() =>
+    tanaAPIHelper.createNode({
+      name: 'year test',
+      children: [
+        {
+          dataType: 'date',
+          name: '2020/2021',
+        },
+      ],
+    }),
+  );
+
+  // timestamp range
+  await expectSuccess(() =>
+    tanaAPIHelper.createNode({
+      name: 'date range test',
+      children: [
+        {
+          dataType: 'date',
+          name: '2020-01-01 00:00:00/2020-01-02 12:00:00',
+        },
+      ],
+    }),
+  );
+
   // custom protocol
   await expectSuccess(() =>
     tanaAPIHelper.createNode({
