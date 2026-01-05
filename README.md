@@ -43,7 +43,7 @@ Tokens are assigned per workspace and can be generated in the Tana Client:
 
 The client uses node-fetch, but native fetch can be used from Node 17.5 with `--experimental-fetch`
 
-Install the deps with `yarn install`, then see below for the examples
+Install the deps with `pnpm install`, then see below for the examples
 
 ## Using existing tags
 
@@ -106,6 +106,14 @@ And comes with a payload example:
 }
 ```
 
+### Date formats
+
+Date fields support the following formats:
+
+- **Without timezone**: `2024-01-15 15:30` or `2024-01-15T15:30:00Z` — interpreted as UTC
+- **With [IANA timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)**: `2024-01-15 15:30[America/Los_Angeles]` — interpreted in the specified timezone
+- **Date only**: `2024-01-15` or `2024-01-15[America/Los_Angeles]`
+- **Date range**: `2024-01-15 09:00[America/Los_Angeles]/2024-01-15 17:00[America/Los_Angeles]`
 
 ## Creating fields & tags
 To create a new field definition you create a node with the supertag set to `SYS_T02`. You'll likely want to target the Schema-node, which would be `SCHEMA`, but you are free to place tags elsewhere as well. This might be useful when creating templates for example
@@ -173,14 +181,20 @@ We currently don't support targeting the Today-node
 
 This example shows how we can create new fields, and then a new tag using those fields. We then create a few books using the tag, and add some extra content to the books afterwards.
 
-`TANA_TOKEN=token yarn run example:books`
+`TANA_TOKEN=token pnpm run example:books`
 
 ## Example:Upload
 
 This example is a basic uploader for `m4a` audio-files from some specified directory to the
 Tana inbox.  It creates a file `tana-upload-state.json` to keep track of what's already uploaded.
 
-`TANA_TOKEN=token yarn run example:upload ~/Recordings/`
+`TANA_TOKEN=token pnpm run example:upload ~/Recordings/`
+
+## Example:Timezone
+
+This example tests date parsing with IANA timezone support. It demonstrates various date formats including dates with timezone specifiers like `[America/Los_Angeles]`.
+
+`TANA_TOKEN=token pnpm run example:timezone`
 
 # Current limitations
 
