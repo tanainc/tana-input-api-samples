@@ -1,5 +1,5 @@
-import { attrDefTemplateId, coreTemplateId } from './types/constants';
-import { APIField, APINode, APIPlainNode, TanaNode } from './types/types';
+import { attrDefTemplateId, coreTemplateId } from './types/constants.js';
+import { APIField, APINode, APIPlainNode, TanaNode } from './types/types.js';
 import fetch from 'node-fetch';
 import { readFileSync } from 'fs';
 

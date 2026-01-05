@@ -7,14 +7,16 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@types/node": "^18.15.11",
+    "@types/node": "^20",
     "typescript": "^5.0.3"
   },
   "scripts": {
     "prepare": "rm -rf dist/ && ./node_modules/.bin/tsc  --project tsconfig.json",
-    "build": "yarn prepare",
-    "example:books": "yarn build && node --experimental-modules --es-module-specifier-resolution=node dist/examples/books.js",
-    "example:upload": "yarn build && node --experimental-modules --es-module-specifier-resolution=node dist/examples/upload.js",
-    "example:smokeTest_internal": "yarn build && node --experimental-modules --es-module-specifier-resolution=node dist/examples/smokeTest.js"
-  }
+    "build": "pnpm prepare",
+    "example:books": "pnpm build && node --experimental-modules --es-module-specifier-resolution=node dist/examples/books.js",
+    "example:upload": "pnpm build && node --experimental-modules --es-module-specifier-resolution=node dist/examples/upload.js",
+    "example:smokeTest_internal": "pnpm build && node --experimental-modules --es-module-specifier-resolution=node dist/examples/smokeTest.js",
+    "example:timezone": "pnpm build && node --experimental-modules --es-module-specifier-resolution=node dist/examples/timezoneTest.js"
+  },
+  "packageManager": "pnpm@10.11.0+sha512.6540583f41cc5f628eb3d9773ecee802f4f9ef9923cc45b69890fb47991d4b092964694ec3a4f738a420c918a333062c8b925d312f42e4f0c263eb603551f977"
 }
