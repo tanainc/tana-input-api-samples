@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
-import { TanaAPIHelper } from '../TanaAPIClient';
-import { waitForEnter } from '../utils';
+import { TanaAPIHelper } from '../TanaAPIClient.js';
+import { waitForEnter } from '../utils.js';
 
 const token = process.env.TANA_TOKEN || '';
 
